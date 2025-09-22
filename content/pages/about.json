@@ -1,0 +1,10 @@
+{
+  "title": "ABOUT",
+  "hero": "My career started in filmmaking, mastering the art of narrative. Today, I use technology as a new canvas to tell stories and build worlds.",
+  "journey": "With a foundation in Motion Pictures and Dramatic Literature, I approach technology from a unique perspective. My journey has taken me from directing an award-winning animated film to pioneering AI workflows that slash production times. This path culminated in co-founding Hackers and Painters, a venture studio dedicated to empowering the next generation of creative technologists. At my core, I am a builder—of tools, of experiences, and of new digital realities.",
+  "skills": [
+    { "section": "GENERATIVE AI & DEVELOPMENT", "items": "AI Workflow Automation, Stable Diffusion, Prompt Engineering, Python, Solidity, Smart Contracts (NFTs & DApps), Arduino (IoT)" },
+    { "section": "CREATIVE & DIRECTION", "items": "Creative Direction, Art Direction, Film Direction, Storytelling, Immersive Environment Design" },
+    { "section": "SOFTWARE & PLATFORMS", "items": "Adobe Creative Suite, Resolume, Git/GitHub, WordPress" }
+  ]
+}
