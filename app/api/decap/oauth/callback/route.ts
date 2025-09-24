@@ -7,6 +7,13 @@ export async function GET(req: NextRequest) {
   const state = req.nextUrl.searchParams.get("state");
 
   if (!code) {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/debug/log`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ level: "warn", message: "oauth_callback_no_code" }),
+      });
+    } catch {}
     // Sometimes the popup is opened directly without a code (CMS probes).
     // Do NOT post an error back; just show a message and close quietly.
     return new Response(`<!DOCTYPE html>
@@ -40,16 +47,37 @@ export async function GET(req: NextRequest) {
 
     if (!res.ok || data.error || !data.access_token) {
       const reason = (data && (data.error_description || data.error)) || "oauth_error";
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/debug/log`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ level: "error", message: "oauth_token_exchange_failed", meta: { reason, data } }),
+        });
+      } catch {}
       return new Response(renderLegacyPostMessage("authorization:github:error", String(reason)), {
         headers: { "Content-Type": "text/html" },
       });
     }
 
     const token = data.access_token as string;
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/debug/log`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ level: "info", message: "oauth_token_exchange_success" }),
+      });
+    } catch {}
     return new Response(renderLegacyPostMessage("authorization:github:success", token), {
       headers: { "Content-Type": "text/html" },
     });
   } catch (e) {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/debug/log`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ level: "error", message: "oauth_callback_exception", meta: { error: String(e) } }),
+      });
+    } catch {}
     return new Response(renderLegacyPostMessage("authorization:github:error", String(e)), {
       headers: { "Content-Type": "text/html" },
     });

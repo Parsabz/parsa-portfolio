@@ -14,6 +14,16 @@ export async function GET(req: NextRequest) {
   url.searchParams.set("scope", scope);
   url.searchParams.set("state", state);
 
+  // debug log
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/debug/log`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ level: "info", message: "oauth_authorize_redirect", meta: { redirect: url.toString() } }),
+      cache: "no-store",
+    });
+  } catch {}
+
   // open in same window for easier debugging; Decap opens in popup, but popup will redirect here anyway
   return Response.redirect(url.toString(), 302);
 }

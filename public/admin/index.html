@@ -15,6 +15,15 @@
   <body>
     <!-- Explicitly initialize CMS and point to the correct config path -->
     <!-- Decap CMS will auto-initialize and load /admin/config.yml -->
+    <script>
+      // Debug listener to confirm messages received by parent
+      window.addEventListener('message', function(e){
+        try { console.log('Admin received message:', e.data); } catch (err) {}
+        try {
+          fetch('/api/debug/log', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level: 'info', message: 'admin_received_message', meta: { origin: e.origin, data: String(e.data).slice(0,200) } }) });
+        } catch (__) {}
+      }, false);
+    </script>
   </body>
 </html>
 
