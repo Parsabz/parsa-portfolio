@@ -2,9 +2,9 @@ backend:
   name: github
   repo: Parsabz/parsa-portfolio
   branch: main
-  base_url: http://localhost:3000
+  base_url: https://parsaw.netlify.app
   auth_endpoint: /api/decap/oauth/authorize
-  site_domain: http://localhost:3000
+  site_domain: https://parsaw.netlify.app
 
 local_backend: false
 
