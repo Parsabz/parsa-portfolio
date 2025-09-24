@@ -55,15 +55,24 @@ function renderLegacyPostMessage(event: string, value: string) {
   return `<!DOCTYPE html>
   <html>
     <head><meta charset=\"utf-8\" /></head>
-    <body>
+    <body style=\"font-family: sans-serif; padding:16px;\">
       <script>
         (function() {
           try {
             var msg = ${JSON.stringify(payload)};
+            // also send structured message for newer handlers
+            var parts = msg.split(':');
+            var obj = { type: parts.slice(0,3).join(':'), value: parts.slice(3).join(':') };
             if (window.opener) window.opener.postMessage(msg, '*');
             if (window.parent) window.parent.postMessage(msg, '*');
+            if (window.opener) window.opener.postMessage(obj, '*');
+            if (window.parent) window.parent.postMessage(obj, '*');
+            console.log('Posted OAuth message to opener/parent:', msg);
+            document.body.innerHTML = '<h3>OAuth callback posted message</h3>'+
+              '<pre>'+msg.replace(/</g,'&lt;')+'</pre>'+
+              '<p>This window will close automatically.</p>';
           } catch (e) { console.error(e); }
-          window.close();
+          setTimeout(function(){ window.close(); }, 5000);
         })();
       </script>
     </body>
