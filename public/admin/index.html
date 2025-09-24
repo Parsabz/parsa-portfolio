@@ -4,10 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Content Admin</title>
-    <script>
-      // Prevent Decap from auto-booting before <body> exists
-      window.CMS_MANUAL_INIT = true;
-    </script>
     <script src="https://unpkg.com/decap-cms@3.8.3/dist/decap-cms.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,17 +14,7 @@
   </head>
   <body>
     <!-- Explicitly initialize CMS and point to the correct config path -->
-    <script>
-      (function() {
-        function init() {
-          if (!window.CMS) { setTimeout(init, 50); return; }
-          var configPath = '/admin/config.yml';
-          window.CMS.init({ config: configPath });
-        }
-        if (document.readyState === 'complete' || document.readyState === 'interactive') init();
-        else window.addEventListener('DOMContentLoaded', init);
-      })();
-    </script>
+    <!-- Decap CMS will auto-initialize and load /admin/config.yml -->
   </body>
 </html>
 
