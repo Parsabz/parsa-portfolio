@@ -7,8 +7,7 @@ export async function GET(req: NextRequest) {
   const state = req.nextUrl.searchParams.get("state");
 
   if (!code) {
-    const err = { error: "missing_code" };
-    return new Response(renderPostMessage("authorization:github:error", err), {
+    return new Response(renderLegacyPostMessage("authorization:github:error", "missing_code"), {
       headers: { "Content-Type": "text/html" },
     });
   }
@@ -32,42 +31,46 @@ export async function GET(req: NextRequest) {
     const data = await res.json();
 
     if (!res.ok || data.error || !data.access_token) {
-      const err = { error: data.error || "oauth_error", details: data };
-      return new Response(renderPostMessage("authorization:github:error", err), {
+      const reason = (data && (data.error_description || data.error)) || "oauth_error";
+      return new Response(renderLegacyPostMessage("authorization:github:error", String(reason)), {
         headers: { "Content-Type": "text/html" },
       });
     }
 
     const token = data.access_token as string;
-    return new Response(renderPostMessage("authorization:github:success", { token }), {
+    return new Response(renderLegacyPostMessage("authorization:github:success", token), {
       headers: { "Content-Type": "text/html" },
     });
   } catch (e) {
-    return new Response(renderPostMessage("authorization:github:error", { error: "exception", details: String(e) }), {
+    return new Response(renderLegacyPostMessage("authorization:github:error", String(e)), {
       headers: { "Content-Type": "text/html" },
     });
   }
 }
 
-function renderPostMessage(event: string, payload: object) {
+function renderLegacyPostMessage(event: string, value: string) {
+  // Decap CMS expects a string message in the format: `authorization:github:success:<token>`
+  // or `authorization:github:error:<reason>`
+  const payload = `${event}:${value}`;
   return `<!DOCTYPE html>
   <html>
     <head><meta charset=\"utf-8\" /></head>
     <body>
       <script>
         (function() {
-          function send() {
-            var payload = ${JSON.stringify(payload)};
-            var msg = { type: '${event}', ...payload };
-            window.opener && window.opener.postMessage(msg, '*');
-            window.parent && window.parent.postMessage(msg, '*');
-            window.close();
-          }
-          try { send(); } catch (e) { console.error(e); }
+          try {
+            var msg = ${JSON.stringify(payload)};
+            if (window.opener) window.opener.postMessage(msg, '*');
+            if (window.parent) window.parent.postMessage(msg, '*');
+          } catch (e) { console.error(e); }
+          window.close();
         })();
       </script>
     </body>
   </html>`;
 }
+
+
+
 
 
