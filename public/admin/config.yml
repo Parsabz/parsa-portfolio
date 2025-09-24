@@ -5,6 +5,7 @@ backend:
   base_url: https://parsaw.netlify.app
   auth_endpoint: /api/decap/oauth/authorize
   site_domain: https://parsaw.netlify.app
+  app_id: "Ov23liIsn0RDmMGIK4iY"
 
 local_backend: false
 

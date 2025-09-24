@@ -4,7 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Content Admin</title>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      // Prevent Decap from auto-booting before <body> exists
+      window.CMS_MANUAL_INIT = true;
+    </script>
+    <script src="https://unpkg.com/decap-cms@3.8.3/dist/decap-cms.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -15,12 +19,21 @@
   <body>
     <!-- Explicitly initialize CMS and point to the correct config path -->
     <script>
-      window.CMS_MANUAL_INIT = true;
-      const configPath = 
-        (window.location.pathname.endsWith('/admin') || window.location.pathname.endsWith('/admin/'))
-        ? '/admin/config.yml'
-        : 'config.yml';
-      CMS.init({ config: configPath });
+      (function() {
+        function init() {
+          if (!window.CMS) {
+            setTimeout(init, 50);
+            return;
+          }
+          var configPath = '/admin/config.yml';
+          window.CMS.init({ config: configPath });
+        }
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          init();
+        } else {
+          window.addEventListener('DOMContentLoaded', init);
+        }
+      })();
     </script>
   </body>
 </html>
