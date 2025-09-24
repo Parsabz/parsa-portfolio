@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 
 const GITHUB_OAUTH_AUTHORIZE_URL = "https://github.com/login/oauth/authorize";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   const clientId = process.env.GITHUB_CLIENT_ID;
   const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/decap/oauth/callback`;
   const scope = "repo,user";
