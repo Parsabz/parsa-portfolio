@@ -22,6 +22,22 @@
         try {
           fetch('/api/debug/log', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level: 'info', message: 'admin_received_message', meta: { origin: e.origin, data: String(e.data).slice(0,200) } }) });
         } catch (__) {}
+
+        try {
+          var token = null;
+          if (typeof e.data === 'string' && e.data.indexOf('authorization:github:success:') === 0) {
+            token = e.data.split(':').slice(3).join(':');
+          } else if (e.data && typeof e.data === 'object' && e.data.type === 'authorization:github:success') {
+            token = e.data.value;
+          }
+          if (token) {
+            var user = { backendName: 'github', login: 'github', token: token };
+            try { localStorage.setItem('decap-cms.user', JSON.stringify(user)); } catch(_) {}
+            try { localStorage.setItem('netlify-cms.user', JSON.stringify(user)); } catch(_) {}
+            console.log('Stored token for Decap CMS, reloading...');
+            setTimeout(function(){ window.location.reload(); }, 200);
+          }
+        } catch (e2) { console.warn('admin token store error', e2); }
       }, false);
     </script>
   </body>
