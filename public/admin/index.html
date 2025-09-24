@@ -26,7 +26,25 @@
             return;
           }
           var configPath = '/admin/config.yml';
-          window.CMS.init({ config: configPath });
+          // Inject runtime app_id from environment if exposed via NEXT_PUBLIC_GITHUB_CLIENT_ID
+          var runtimeAppId = typeof window !== 'undefined' && window._env_ && window._env_.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+          var cfg = { load_config_file: true, config: configPath };
+          if (runtimeAppId) {
+            cfg.config = {
+              backend: {
+                name: 'github',
+                repo: 'Parsabz/parsa-portfolio',
+                branch: 'main',
+                base_url: 'https://parsaw.netlify.app',
+                auth_endpoint: '/api/decap/oauth/authorize',
+                site_domain: 'https://parsaw.netlify.app',
+                app_id: runtimeAppId
+              },
+              media_folder: 'public/uploads',
+              public_folder: '/uploads'
+            };
+          }
+          window.CMS.init(cfg);
         }
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
           init();

@@ -1,0 +1,5 @@
+window._env_ = {
+  NEXT_PUBLIC_GITHUB_CLIENT_ID: "${NEXT_PUBLIC_GITHUB_CLIENT_ID}"
+};
+
+

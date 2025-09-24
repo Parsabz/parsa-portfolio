@@ -15,3 +15,9 @@
   from = "/admin/*"
   to = "/admin/:splat"
   status = 200
+
+[template.environment]
+  NEXT_PUBLIC_SITE_URL = "Set to your Netlify URL, e.g. https://parsaw.netlify.app"
+  GITHUB_CLIENT_ID = "GitHub OAuth App Client ID"
+  GITHUB_CLIENT_SECRET = "GitHub OAuth App Client Secret"
+  NEXT_PUBLIC_GITHUB_CLIENT_ID = "Duplicate of Client ID for client-side CMS init"
