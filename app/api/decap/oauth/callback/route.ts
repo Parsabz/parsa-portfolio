@@ -7,9 +7,17 @@ export async function GET(req: NextRequest) {
   const state = req.nextUrl.searchParams.get("state");
 
   if (!code) {
-    return new Response(renderLegacyPostMessage("authorization:github:error", "missing_code"), {
-      headers: { "Content-Type": "text/html" },
-    });
+    // Sometimes the popup is opened directly without a code (CMS probes).
+    // Do NOT post an error back; just show a message and close quietly.
+    return new Response(`<!DOCTYPE html>
+    <html>
+      <head><meta charset=\"utf-8\" /></head>
+      <body style=\"font-family:sans-serif;padding:16px;\">
+        <h3>No authorization code present</h3>
+        <p>Closing this window…</p>
+        <script>setTimeout(function(){ window.close(); }, 1200);</script>
+      </body>
+    </html>`, { headers: { "Content-Type": "text/html" } });
   }
 
   try {
