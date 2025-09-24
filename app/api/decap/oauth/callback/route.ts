@@ -71,10 +71,10 @@ function renderLegacyPostMessage(event: string, value: string) {
             // also send structured message for newer handlers
             var parts = msg.split(':');
             var obj = { type: parts.slice(0,3).join(':'), value: parts.slice(3).join(':') };
-            if (window.opener) window.opener.postMessage(msg, '*');
-            if (window.parent) window.parent.postMessage(msg, '*');
-            if (window.opener) window.opener.postMessage(obj, '*');
-            if (window.parent) window.parent.postMessage(obj, '*');
+            try { if (window.opener) window.opener.postMessage(msg, '${process.env.NEXT_PUBLIC_SITE_URL || "https://parsaw.netlify.app"}'); } catch (_) {}
+            try { if (window.parent) window.parent.postMessage(msg, '${process.env.NEXT_PUBLIC_SITE_URL || "https://parsaw.netlify.app"}'); } catch (_) {}
+            try { if (window.opener) window.opener.postMessage(obj, '${process.env.NEXT_PUBLIC_SITE_URL || "https://parsaw.netlify.app"}'); } catch (_) {}
+            try { if (window.parent) window.parent.postMessage(obj, '${process.env.NEXT_PUBLIC_SITE_URL || "https://parsaw.netlify.app"}'); } catch (_) {}
             console.log('Posted OAuth message to opener/parent:', msg);
             document.body.innerHTML = '<h3>OAuth callback posted message</h3>'+
               '<pre>'+msg.replace(/</g,'&lt;')+'</pre>'+
