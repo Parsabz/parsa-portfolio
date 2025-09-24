@@ -14,7 +14,11 @@ export async function GET(req: NextRequest) {
   url.searchParams.set("scope", scope);
   url.searchParams.set("state", state);
 
+  // open in same window for easier debugging; Decap opens in popup, but popup will redirect here anyway
   return Response.redirect(url.toString(), 302);
 }
+
+
+
 
 
