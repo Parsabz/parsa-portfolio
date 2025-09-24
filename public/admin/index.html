@@ -16,8 +16,11 @@
     <!-- Explicitly initialize CMS and point to the correct config path -->
     <script>
       window.CMS_MANUAL_INIT = true;
-      // Ensure the config is fetched from /admin/config.yml in production
-      CMS.init({ config: '/admin/config.yml' });
+      const configPath = 
+        (window.location.pathname.endsWith('/admin') || window.location.pathname.endsWith('/admin/'))
+        ? '/admin/config.yml'
+        : 'config.yml';
+      CMS.init({ config: configPath });
     </script>
   </body>
 </html>

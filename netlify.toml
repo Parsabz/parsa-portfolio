@@ -13,5 +13,5 @@
 
 [[redirects]]
   from = "/admin/*"
-  to = "/admin/index.html"
+  to = "/admin/:splat"
   status = 200
