@@ -89,8 +89,6 @@ export default function RootLayout({
           <Header />
           <main className="site-main">{children}</main>
         </div>
-        {/* Expose selected public env variables to window for CMS init */}
-        <script src="/env.js" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
